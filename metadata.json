@@ -1,0 +1,5 @@
+{
+  "name": "Copy of NLCCMS — Complaint Management System",
+  "description": "A full-stack Complaint Management System built with React and Node.js + Express + SQLite. Features include citizen registration, anonymous submissions, tracking, and an admin dashboard.",
+  "requestFramePermissions": []
+}
