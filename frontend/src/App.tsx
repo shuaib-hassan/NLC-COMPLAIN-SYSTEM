@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import { AuthProvider } from "./context/AuthContext";
 import Navbar from "./components/Navbar";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -80,6 +81,7 @@ export default function App() {
           </main>
           <AIChatbot />
           <Analytics />
+          <SpeedInsights />
           <footer className="bg-white border-t border-slate-200 py-12">
             <div className="max-w-7xl mx-auto px-4 text-center">
               <div className="flex justify-center mb-6">
