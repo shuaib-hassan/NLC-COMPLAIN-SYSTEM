@@ -24,6 +24,7 @@ const AIChatbot: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [isThinkingMode, setIsThinkingMode] = useState(false);
+  const [showWelcomeTooltip, setShowWelcomeTooltip] = useState(true);
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "model",
@@ -41,6 +42,15 @@ const AIChatbot: React.FC = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  useEffect(() => {
+    // Show welcome tooltip for 8 seconds then hide it
+    const timer = setTimeout(() => {
+      setShowWelcomeTooltip(false);
+    }, 8000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
@@ -83,20 +93,75 @@ const AIChatbot: React.FC = () => {
     <div className="fixed bottom-6 right-6 z-[100]">
       <AnimatePresence>
         {!isOpen && (
-          <motion.button
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0, opacity: 0 }}
-            onClick={() => setIsOpen(true)}
-            className="bg-white text-emerald-600 p-2 rounded-full shadow-2xl hover:shadow-emerald-200/50 transition-all group relative overflow-hidden border-2 border-emerald-600"
-          >
-            <img
-              src="/LOGO.png"
-              alt="NLC Logo"
-              className="h-10 w-10 object-contain"
-            />
-            <div className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full border-2 border-white animate-pulse" />
-          </motion.button>
+          <>
+            <motion.button
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0, opacity: 0 }}
+              onClick={() => {
+                setIsOpen(true);
+                setShowWelcomeTooltip(false);
+              }}
+              className="bg-white text-emerald-600 p-2 rounded-full shadow-2xl hover:shadow-emerald-200/50 transition-all group relative overflow-hidden border-2 border-emerald-600"
+            >
+              <img
+                src="/LOGO.png"
+                alt="NLC Logo"
+                className="h-10 w-10 object-contain"
+              />
+              <div className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full border-2 border-white animate-pulse" />
+            </motion.button>
+
+            {/* Welcome Tooltip */}
+            {showWelcomeTooltip && (
+              <motion.div
+                role="tooltip"
+                aria-live="polite"
+                aria-label="AI Assistant Welcome Message"
+                initial={{ opacity: 0, x: 20, scale: 0.9 }}
+                animate={{ opacity: 1, x: 0, scale: 1 }}
+                exit={{ opacity: 0, x: 20, scale: 0.9 }}
+                className="absolute bottom-0 right-20 bg-white rounded-2xl shadow-2xl border-2 border-emerald-600 p-4 w-72"
+              >
+                <button
+                  onClick={() => setShowWelcomeTooltip(false)}
+                  aria-label="Close welcome message"
+                  className="absolute top-2 right-2 text-slate-400 hover:text-slate-600 transition-colors"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+                <div className="flex items-start gap-3">
+                  <div className="bg-emerald-100 p-2 rounded-lg flex-shrink-0">
+                    <Bot className="h-5 w-5 text-emerald-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-slate-800 text-sm mb-1">
+                      Need Assistance?
+                    </h3>
+                    <p className="text-xs text-slate-600 leading-relaxed">
+                      I'm your AI assistant! Click the button to ask me anything
+                      about land-related matters, complaints, or NLC services.
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-3 flex items-center justify-between">
+                  <div className="flex items-center gap-1 text-[10px] text-emerald-600 font-medium">
+                    <Sparkles className="h-3 w-3" />
+                    Powered by AI
+                  </div>
+                  <button
+                    onClick={() => {
+                      setIsOpen(true);
+                      setShowWelcomeTooltip(false);
+                    }}
+                    className="text-xs bg-emerald-600 text-white px-3 py-1.5 rounded-lg hover:bg-emerald-700 transition-colors font-medium"
+                  >
+                    Chat Now
+                  </button>
+                </div>
+              </motion.div>
+            )}
+          </>
         )}
       </AnimatePresence>
 
